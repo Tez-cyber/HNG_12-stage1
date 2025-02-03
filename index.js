@@ -21,9 +21,25 @@ app.use(cors({
 app.get("/api/classify-number", (req, res) => {
     const numberQuery = req.query.number
 
+    // == CHECK FOR NUMBER QUERY
     if (!numberQuery) {
         return res.status(400).json({ error: "Please provide a number" })
     }
+
+    // == CHECK IF QUERY IS A NUMBER
+    const checkNumber = parseInt(numberQuery);
+
+    if (isNaN(checkNumber)) {
+        return res.status(400).json({
+            "number": "alphabet",
+            "error": true
+        })
+    }
+
+
+    return res.status(200).json({
+        "number": checkNumber
+    })
 })
 
 
