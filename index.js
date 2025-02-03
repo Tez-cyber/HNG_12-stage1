@@ -36,9 +36,16 @@ app.get("/api/classify-number", (req, res) => {
         })
     }
 
+    // ======= SUM OF NUMBERS PASSED
+    const numArr = checkNumber.toString().split("")
+    const sum = numArr.map(digit => parseInt(digit)).reduce((a, b) => a + b)
+
+
+
 
     return res.status(200).json({
-        "number": checkNumber
+        "number": checkNumber,
+        sum
     })
 })
 
