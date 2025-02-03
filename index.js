@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,14 @@ app.use(cors({
     }
 }));
 
+// ============== ROUTE
+app.get("/api/classify-number", (req, res) => {
+    const numberQuery = req.query.number
+
+    if (!numberQuery) {
+        return res.status(400).json({ error: "Please provide a number" })
+    }
+})
 
 
 // ============== START SERVER
