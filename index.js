@@ -13,7 +13,7 @@ app.use(cors({
         }
         const msg = 'Go baack!!!!! Origin not allowed by CORS';
         return callback(new Error(msg), false);
-        
+
     }
 }));
 
@@ -40,11 +40,29 @@ app.get("/api/classify-number", (req, res) => {
     const numArr = checkNumber.toString().split("")
     const sum = numArr.map(digit => parseInt(digit)).reduce((a, b) => a + b)
 
+    // ===== CHECK IF NUMBER IS PRIME
+    function isPrime(checkNumber) { 
+        if (checkNumber < 2) {
+            return false;
+        }
+
+        for (let i = 2; i * i <= checkNumber; i++) { // Optimized loop
+            if (checkNumber % i === 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    const is_prime = isPrime(checkNumber);  // Call the isPrime function
+
 
 
 
     return res.status(200).json({
         "number": checkNumber,
+        "is_prime": is_prime,
         sum
     })
 })
