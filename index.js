@@ -57,13 +57,20 @@ app.get("/api/classify-number", (req, res) => {
 
     const is_prime = isPrime(checkNumber);  // Call the isPrime function
 
-
-
+    // ========= CHECK IF NUMBER IS A PERFECT SQUARE
+    const isPerfectSquare = (num) => {
+        if(num < 0) return false;
+        const sqrt = Math.sqrt(num);
+        return Number.isInteger(sqrt);
+    }
+    const is_perfect = isPerfectSquare(checkNumber)
 
     return res.status(200).json({
         "number": checkNumber,
         "is_prime": is_prime,
-        sum
+        "is_perfect": is_perfect,
+        "properties": "",
+        "digit_sum": sum
     })
 })
 
