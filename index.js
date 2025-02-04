@@ -44,7 +44,9 @@ app.get("/api/classify-number", async (req, res) => {
     }
 
     // == CHECK IF QUERY IS A NUMBER
-    const checkNumber = parseInt(numberQuery);
+    const checkNumber = parseInt(!numberQuery.match(/^-?[0-9]+$/) ? 
+        "string" : numberQuery
+    );
     if (isNaN(checkNumber)) {
         return res.status(400).json({
             "number": "alphabet",
