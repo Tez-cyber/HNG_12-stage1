@@ -36,6 +36,13 @@ This API takes an integer as input and returns various mathematical properties o
 
 `GET <your-domain.com>/api/classify-number?number=371`
 
+## Setup Instructions
+
+1. Clone the repository: `git clone https://github.com/Tez-cyber/HNG_12-stage1`
+2. Navigate to the project directory: `cd your-repo`
+3. Install dependencies: `npm install`
+4. Start the server: `npm start`
+
 ### Required JSON Response Format (200 OK)
 
 ```json
