@@ -28,7 +28,6 @@ app.get("/api/classify-number", async (req, res) => {
 
     // == CHECK IF QUERY IS A NUMBER
     const checkNumber = parseInt(numberQuery);
-
     if (isNaN(checkNumber)) {
         return res.status(400).json({
             "number": "alphabet",
@@ -39,6 +38,12 @@ app.get("/api/classify-number", async (req, res) => {
     // ======= SUM OF NUMBERS PASSED
     const numArr = checkNumber.toString().split("")
     const sum = numArr.map(digit => parseInt(digit)).reduce((a, b) => a + b)
+    const isArmstrong = (_) => {
+        const numArrLength = numArr.length;
+        const sum_armstrong = numArr.map(digit => Math.pow(parseInt(digit), numArrLength)).reduce((a, b) => a + b);
+
+        return sum_armstrong === checkNumber;
+    }
 
     // ===== CHECK IF NUMBER IS PRIME
     function isPrime(checkNumber) {
@@ -55,7 +60,6 @@ app.get("/api/classify-number", async (req, res) => {
         return true;
     }
 
-    const is_prime = isPrime(checkNumber);  // Call the isPrime function
 
     // ========= CHECK IF NUMBER IS A PERFECT SQUARE
     const isPerfectSquare = (num) => {
@@ -63,7 +67,6 @@ app.get("/api/classify-number", async (req, res) => {
         const sqrt = Math.sqrt(num);
         return Number.isInteger(sqrt);
     }
-    const is_perfect = isPerfectSquare(checkNumber)
 
     // ========= GET FUN FACT
     const funFactCache = new Map();
@@ -98,15 +101,29 @@ app.get("/api/classify-number", async (req, res) => {
             return "Fun fact could not be retrieved.";
         }
     };
+
+    // ===================
+    const properties = [];
+    const is_armstrong = isArmstrong(checkNumber);
+    if(is_armstrong) {
+        properties.push("armstrong");
+    }
+    if(checkNumber % 2 === 0) {
+        properties.push("even");
+    } else {
+        properties.push("odd");
+    }
+    const is_perfect = isPerfectSquare(checkNumber)
     const fun_fact = await getFunFact(checkNumber);
+    const is_prime = isPrime(checkNumber);
 
     return res.status(200).json({
         "number": checkNumber,
         "is_prime": is_prime,
         "is_perfect": is_perfect,
+        "properties": properties,
+        "digit_sum": sum,
         "fun_fact": fun_fact,
-        "properties": "",
-        "digit_sum": sum
     })
 })
 
