@@ -5,7 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ============== MIDDLEWARES
-const allowedOrigins = [`http://localhost:${PORT}`];
+const allowedOrigins = [`http://localhost:${PORT}`, "https://hng-12-stage1.onrender.com/"];
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) === -1) {
@@ -18,6 +18,23 @@ app.use(cors({
 }));
 
 // ============== ROUTE
+app.get('/', (req, res) => {
+    res.send(`
+        <!DOCTYPE html>
+            <html>
+            <head>
+                <title>My Web Page</title>
+            </head>
+            <body>
+                <form action="/api/classify-number" method="GET">
+                    <label for="number">Enter a number:</label>
+                    <input type="text" id="number" name="number">
+                    <button type="submit">Submit</button>
+                </form>
+            </body>
+            </html>
+      `);
+});
 app.get("/api/classify-number", async (req, res) => {
     const numberQuery = req.query.number
 
@@ -77,9 +94,9 @@ app.get("/api/classify-number", async (req, res) => {
             const cachedFact = funFactCache.get(num);
             if (Date.now() - cachedFact.timestamp < CACHE_TTL) {
                 return cachedFact.fact;
-              } else {
+            } else {
                 funFactCache.delete(num); // Remove expired entry
-              }
+            }
         };
 
         try {
@@ -105,10 +122,10 @@ app.get("/api/classify-number", async (req, res) => {
     // ===================
     const properties = [];
     const is_armstrong = isArmstrong(checkNumber);
-    if(is_armstrong) {
+    if (is_armstrong) {
         properties.push("armstrong");
     }
-    if(checkNumber % 2 === 0) {
+    if (checkNumber % 2 === 0) {
         properties.push("even");
     } else {
         properties.push("odd");
