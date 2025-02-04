@@ -65,8 +65,20 @@ app.get("/api/classify-number", async (req, res) => {
     }
     const is_perfect = isPerfectSquare(checkNumber)
 
-    // ========= RESPONSE
+    // ========= GET FUN FACT
+    const funFactCache = new Map();
+    const CACHE_TTL = 60 * 60 * 1000;
     const getFunFact = async (num) => {
+        // CHECK IF FUN FACT IS IN CACHE
+        if (funFactCache.has(num)) {
+            const cachedFact = funFactCache.get(num);
+            if (Date.now() - cachedFact.timestamp < CACHE_TTL) {
+                return cachedFact.fact;
+              } else {
+                funFactCache.delete(num); // Remove expired entry
+              }
+        };
+
         try {
             const response = await fetch(`http://numbersapi.com/${num}/math`);
 
@@ -76,10 +88,14 @@ app.get("/api/classify-number", async (req, res) => {
             }
 
             const data = await response.text();
+            funFactCache.set(num, {
+                fact: data,
+                timestamp: Date.now()
+            });
             return data;
         } catch (error) {
             console.error("Error fetching fun fact:", error);
-            return "Fun fact could not be retrieved."; // Provide a fallback
+            return "Fun fact could not be retrieved.";
         }
     };
     const fun_fact = await getFunFact(checkNumber);
