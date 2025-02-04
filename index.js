@@ -54,6 +54,9 @@ app.get("/api/classify-number", async (req, res) => {
 
     // ======= SUM OF NUMBERS PASSED
     const numArr = checkNumber.toString().split("")
+    if (numArr.includes("-")) {
+        numArr.splice(0, 1);
+    }
     const sum = numArr.map(digit => parseInt(digit)).reduce((a, b) => a + b)
     const isArmstrong = (_) => {
         const numArrLength = numArr.length;
@@ -135,7 +138,7 @@ app.get("/api/classify-number", async (req, res) => {
     const is_prime = isPrime(checkNumber);
 
     return res.status(200).json({
-        "number": checkNumber,
+        "number": numArr,
         "is_prime": is_prime,
         "is_perfect": is_perfect,
         "properties": properties,
