@@ -18,7 +18,7 @@ app.use(cors({
 }));
 
 // ============== ROUTE
-app.get("/api/classify-number", (req, res) => {
+app.get("/api/classify-number", async (req, res) => {
     const numberQuery = req.query.number
 
     // == CHECK FOR NUMBER QUERY
@@ -41,7 +41,7 @@ app.get("/api/classify-number", (req, res) => {
     const sum = numArr.map(digit => parseInt(digit)).reduce((a, b) => a + b)
 
     // ===== CHECK IF NUMBER IS PRIME
-    function isPrime(checkNumber) { 
+    function isPrime(checkNumber) {
         if (checkNumber < 2) {
             return false;
         }
@@ -59,16 +59,36 @@ app.get("/api/classify-number", (req, res) => {
 
     // ========= CHECK IF NUMBER IS A PERFECT SQUARE
     const isPerfectSquare = (num) => {
-        if(num < 0) return false;
+        if (num < 0) return false;
         const sqrt = Math.sqrt(num);
         return Number.isInteger(sqrt);
     }
     const is_perfect = isPerfectSquare(checkNumber)
 
+    // ========= RESPONSE
+    const getFunFact = async (num) => {
+        try {
+            const response = await fetch(`http://numbersapi.com/${num}/math`);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+            }
+
+            const data = await response.text();
+            return data;
+        } catch (error) {
+            console.error("Error fetching fun fact:", error);
+            return "Fun fact could not be retrieved."; // Provide a fallback
+        }
+    };
+    const fun_fact = await getFunFact(checkNumber);
+
     return res.status(200).json({
         "number": checkNumber,
         "is_prime": is_prime,
         "is_perfect": is_perfect,
+        "fun_fact": fun_fact,
         "properties": "",
         "digit_sum": sum
     })
