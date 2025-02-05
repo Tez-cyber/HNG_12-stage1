@@ -157,7 +157,7 @@ app.get("/api/classify-number", async (req, res) => {
     const is_prime = isPrime(checkNumber);
 
     return res.status(200).json({
-        "number": numArr,
+        "number": checkNumber,
         "is_prime": is_prime,
         "is_perfect": is_perfect,
         "properties": properties,
