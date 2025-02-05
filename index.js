@@ -82,6 +82,20 @@ app.get("/api/classify-number", async (req, res) => {
         return true;
     }
 
+    // CHECH IF NUMBER IS A PERFECT
+    const isPerfect = (num) => {
+        if (num <= 1) return false;
+
+        let sumOfDivisors = 0;
+
+        for(let i = 1; i <= num / 2; i++) {
+            if (num % i === 0) {
+                sumOfDivisors += i;
+            }
+        }
+
+        return sumOfDivisors === num;
+    }
 
     // ========= CHECK IF NUMBER IS A PERFECT SQUARE
     const isPerfectSquare = (num) => {
@@ -135,7 +149,7 @@ app.get("/api/classify-number", async (req, res) => {
     } else {
         properties.push("odd");
     }
-    const is_perfect = isPerfectSquare(checkNumber)
+    const is_perfect = isPerfect(checkNumber)
     const fun_fact = await getFunFact(checkNumber);
     const is_prime = isPrime(checkNumber);
 
