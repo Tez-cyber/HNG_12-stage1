@@ -111,10 +111,8 @@ app.get("/api/classify-number", async (req, res) => {
         // CHECK IF FUN FACT IS IN CACHE
         if (funFactCache.has(num)) {
             const cachedFact = funFactCache.get(num);
-            if (Date.now() - cachedFact.timestamp < CACHE_TTL) {
+            if (cachedFact.expires > Date.now()) {
                 return cachedFact.fact;
-            } else {
-                funFactCache.delete(num); // Remove expired entry
             }
         };
 
@@ -127,9 +125,10 @@ app.get("/api/classify-number", async (req, res) => {
             }
 
             const data = await response.text();
+            const expires = Date.now() + CACHE_TTL;
             funFactCache.set(num, {
                 fact: data,
-                timestamp: Date.now()
+                expires: expires
             });
             return data;
         } catch (error) {
@@ -151,6 +150,10 @@ app.get("/api/classify-number", async (req, res) => {
     }
     const is_perfect = isPerfect(checkNumber)
     const fun_fact = await getFunFact(checkNumber);
+    setTimeout(async () => {
+        const fact = await getFunFact(42);
+        console.log(fact);
+      }, 3600001);
     const is_prime = isPrime(checkNumber);
 
     return res.status(200).json({
