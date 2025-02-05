@@ -151,7 +151,7 @@ app.get("/api/classify-number", async (req, res) => {
     const is_perfect = isPerfect(checkNumber)
     const fun_fact = await getFunFact(checkNumber);
     setTimeout(async () => {
-        const fact = await getFunFact(42);
+        const fact = await getFunFact(checkNumber);
         console.log(fact);
       }, 3600001);
     const is_prime = isPrime(checkNumber);
